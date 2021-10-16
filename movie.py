@@ -5,8 +5,8 @@ class PriceCode(Enum):
     """An enumeration for different kinds of movies and their behavior"""
     new_release = {"price": lambda days: 3.0 * days,
                    "frequent_renter_points": lambda days: days}
-    normal = {"price": lambda days: (1.5 * days) + 2.0 if (days > 2) else 2,
-              "frequent_rental_points": lambda days: 1}
+    regular = {"price": lambda days: (1.5 * days) + 2.0 if (days > 2) else 2,
+               "frequent_rental_points": lambda days: 1}
     children = {"price": lambda days: (1.5 * days) + 2.5 if (days > 3) else 1.5,
                 "frequent_rental_points": lambda days: 1}
 
@@ -20,6 +20,7 @@ class Movie:
     """
     A movie available for rent.
     """
+
     # The types of movies (price_code).
 
     def __init__(self, title, price_code):
