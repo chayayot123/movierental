@@ -15,6 +15,11 @@ class PriceCode(Enum):
         pricing = self.value["price"]  # the enum member's price formula
         return pricing(days)
 
+    def points(self, days: int) -> float:
+        """Return the rental points for a given number of days."""
+        point = self.value["frequent_rental_points"]
+        return point(days)
+
 
 class Movie:
     """
