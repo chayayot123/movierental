@@ -28,5 +28,3 @@ class Rental:
 
 	def get_rental_point(self):
 		return self.get_movie().get_price_code().points(self.get_days_rented())
-
-
