@@ -39,13 +39,9 @@ class Customer:
 
         for rental in self.rentals:
             # compute rental change
-            amount = 0
-            amount = self.get_rental(amount, rental)
-            # award renter points
-            frequent_renter_points = self.get_frp_point(frequent_renter_points, rental)
             frequent_renter_points += 1
-            statement += fmt.format(rental.get_movie().get_title(), rental.get_days_rented(), amount)
-            total_amount += amount
+            statement += fmt.format(rental.get_movie().get_title(), rental.get_days_rented(), rental.get_price())
+            total_amount += rental.get_price()
 
         # footer: summary of charges
         statement += "\n"
@@ -54,31 +50,6 @@ class Customer:
         statement += "Frequent Renter Points earned: {}\n".format(frequent_renter_points)
 
         return statement
-
-    def get_rental(self, amount, rental):
-        if rental.get_movie().get_price_code() == PriceCode.regular:
-            # Two days for $2, additional days 1.50 each.
-            amount = 2.0
-            if rental.get_days_rented() > 2:
-                amount += 1.5 * (rental.get_days_rented() - 2)
-        elif rental.get_movie().get_price_code() == PriceCode.children:
-            # Three days for $1.50, additional days 1.50 each.
-            amount = 1.5
-            if rental.get_days_rented() > 3:
-                amount += 1.5 * (rental.get_days_rented() - 3)
-        elif rental.get_movie().get_price_code() == PriceCode.new_release:
-            # Straight per day charge
-            amount = 3 * rental.get_days_rented()
-        else:
-            log = logging.getLogger()
-            log.error(
-                f"Movie {rental.get_movie()} has unrecognized priceCode {rental.get_movie().get_price_code()}")
-        return amount
-
-    def get_frp_point(self, frequent_renter_points, rental):
-        if rental.get_movie().get_price_code() == PriceCode.new_release:
-            frequent_renter_points += rental.get_days_rented()
-        return frequent_renter_points
 
 
 if __name__ == "__main__":
