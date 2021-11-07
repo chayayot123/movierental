@@ -1,44 +1,53 @@
-from enum import Enum
-
-
-class PriceCode(Enum):
-    """An enumeration for different kinds of movies and their behavior"""
-    new_release = {"price": lambda days: 3.0 * days,
-                   "frequent_renter_points": lambda days: days}
-    regular = {"price": lambda days: (1.5 * days) + 2.0 if (days > 2) else 2,
-               "frequent_rental_points": lambda days: 1}
-    children = {"price": lambda days: (1.5 * days) + 2.5 if (days > 3) else 1.5,
-                "frequent_rental_points": lambda days: 1}
-
-    def price(self, days: int) -> float:
-        """Return the rental price for a given number of days"""
-        pricing = self.value["price"]  # the enum member's price formula
-        return pricing(days)
-
-    def points(self, days: int) -> float:
-        """Return the rental points for a given number of days."""
-        point = self.value["frequent_rental_points"]
-        return point(days)
+from typing import List
+import csv
 
 
 class Movie:
-    """
-    A movie available for rent.
-    """
+    """A movie available for rent."""
+    REGULAR = 0
+    NEW_RELEASE = 1
+    CHILDREN = 2
 
-    # The types of movies (price_code).
-
-    def __init__(self, title, price_code):
-        # Initialize a new movie.
+    def __init__(self, title:str, year: int, genre: List[str], price_code):
+        """Initialize a new movie."""
         self.title = title
-        self.price_code = price_code
+        self.year = year
+        self.genre = genre
+        self._price_code = price_code
 
-    def get_price_code(self):
-        # get the price code
-        return self.price_code
+    def get_genre(self):
+        return self.genre
+
+    def is_genre(self, genre:str):
+        return genre in self.genre
+
+    def get_year(self):
+        return self.year
 
     def get_title(self):
         return self.title
+    
+    def get_price_code(self):
+        return self._price_code
 
     def __str__(self):
         return self.title
+
+
+class MovieCatalog:
+
+    def __init__(self):
+        """Initialize a new movie."""
+        self.movie_list = {}
+        with open('movies.csv') as file:
+            reader = csv.DictReader(file)
+        for i in reader:
+            self.movie_list[i["title"]] = {
+                "#id": i["#id"],
+                "year": i["year"],
+                "genre": [j for j in i["genres"].split("|")]
+            }
+
+    def get_movie(self, title):
+        movie = self.movie_list[title]
+        return Movie(title, movie["year"], movie["genre"])
