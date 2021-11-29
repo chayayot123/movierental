@@ -57,11 +57,11 @@ class Rental:
 
     @classmethod
     def for_movie(cls, movies: Movie):
-        price_code = PriceCode.REGULAR
+        price_code = PriceCode.regular
         if int(movies.get_year()) == datetime.now().year:
-            price_code = PriceCode.NEW_REALEASE
+            price_code = PriceCode.new_release
         elif movies.is_genre("Children"):
-            price_code = PriceCode.CHILDREN
+            price_code = PriceCode.children
         return price_code
 
 
